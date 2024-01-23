@@ -3,21 +3,15 @@
 from pymongo import MongoClient
 
 if __name__ == "__main__":
-    """ Provides some stats about Nginx logs stored in MongoDB """
-    client = MongoClient('mongodb://127.0.0.1:27017')
-    nginx_collection = client.logs.nginx
+    client = MongoClient("mongodb://127.0.0.1:27017")
+    nginx_logs = client.logs.nginx
 
-    n_logs = nginx_collection.count_documents({})
-    print(f'{n_logs} logs')
-
-    methods = ["GET", "POST", "PUT", "PATCH", "DELETE"]
-    print('Methods:')
-    for method in methods:
-        count = nginx_collection.count_documents({"method": method})
-        print(f'\tmethod {method}: {count}')
-
-    status_check = nginx_collection.count_documents(
-        {"method": "GET", "path": "/status"}
-    )
-
-    print(f'{status_check} status check')
+    print(nginx_logs.count_documents({}), "logs")
+    print("Methods:")
+    print("\tmethod GET:", nginx_logs.count_documents({"method": "GET"}))
+    print("\tmethod POST:", nginx_logs.count_documents({"method": "POST"}))
+    print("\tmethod PUT:", nginx_logs.count_documents({"method": "PUT"}))
+    print("\tmethod PATCH:", nginx_logs.count_documents({"method": "PATCH"}))
+    print("\tmethod DELETE:", nginx_logs.count_documents({"method": "DELETE"}))
+    print(nginx_logs.count_documents({"method": "GET", "path": "/status"}),
+          "status check")
